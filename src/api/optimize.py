@@ -11,7 +11,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
-from src.core.orchestrator import ExperimentOrchestrator
+# from src.core.orchestrator import ExperimentOrchestrator
 from src.database import SessionLocal, get_db
 from src.models.experiment import Experiment, ExperimentStatus
 from src.models.optimization_run import OptimizationRun
@@ -39,6 +39,7 @@ async def start_optimization(
         HTTPException: If experiment not found or already running
     """
     # Get experiment
+    from src.core.orchestrator import ExperimentOrchestrator
     experiment = db.query(Experiment).filter(Experiment.id == experiment_id).first()
 
     if not experiment:
