@@ -3,13 +3,13 @@ import axios from 'axios';
 // Base URL for API
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-// Create axios instance
+// Create axios instance with longer timeout
 const apiClient = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 120000,
+  timeout: 120000, // 2 minutes for Render cold starts
 });
 
 // Request interceptor
@@ -47,10 +47,12 @@ export const api = {
   uploadModel: (experimentId, formData) => 
     apiClient.post(`/api/upload/${experimentId}/model`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 300000, // 5 minutes for file uploads
     }),
   uploadDataset: (experimentId, formData) =>
     apiClient.post(`/api/upload/${experimentId}/dataset`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 300000, // 5 minutes for file uploads
     }),
   
   // Optimization
@@ -65,6 +67,7 @@ export const api = {
   downloadModel: (experimentId, techniqueName) =>
     apiClient.get(`/api/results/${experimentId}/download/${techniqueName}`, {
       responseType: 'blob',
+      timeout: 300000, // 5 minutes for downloads
     }),
 };
 
