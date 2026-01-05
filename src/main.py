@@ -3,12 +3,12 @@ Main FastAPI application entry point.
 """
 
 import logging
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.api import experiments, optimize, performance, results, upload, websocket
 from src.config import settings
 from src.database import Base, engine
 
@@ -28,6 +28,7 @@ async def lifespan(app: FastAPI):
     """
     # Startup
     logger.info("Starting Edge AI AutoML Platform...")
+    logger.info(f"Binding to port: {os.getenv('PORT', '8000')}")
 
     # Create database tables
     logger.info("Creating database tables...")
@@ -71,25 +72,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Register API routers
-app.include_router(experiments.router, prefix="/api/experiments", tags=["Experiments"])
-
-app.include_router(upload.router, prefix="/api/upload", tags=["Upload"])
-
-app.include_router(optimize.router, prefix="/api/optimize", tags=["Optimization"])
-
-app.include_router(results.router, prefix="/api/results", tags=["Results"])
-
-app.include_router(performance.router, prefix="/api/performance", tags=["Performance"])
-
-app.include_router(websocket.router, prefix="/ws", tags=["WebSocket"])
+# Health check endpoint - MUST respond immediately
+@app.get("/health", tags=["Health"])
+async def health_check():
+    """Health check endpoint - responds immediately."""
+    return {"status": "healthy", "version": "1.0.0"}
 
 
 @app.get("/", tags=["Root"])
 async def root():
-    """
-    Root endpoint - API information.
-    """
+    """Root endpoint - API information."""
     return {
         "name": "Edge AI AutoML Platform",
         "version": "1.0.0",
@@ -99,19 +91,21 @@ async def root():
     }
 
 
-@app.get("/health", tags=["Health"])
-async def health_check():
-    """
-    Health check endpoint.
-    """
-    return {"status": "healthy", "version": "1.0.0"}
+# Import API routers AFTER app is created (lazy loading heavy dependencies)
+from src.api import experiments, upload, optimize, results, performance, websocket
+
+# Register API routers
+app.include_router(experiments.router, prefix="/api/experiments", tags=["Experiments"])
+app.include_router(upload.router, prefix="/api/upload", tags=["Upload"])
+app.include_router(optimize.router, prefix="/api/optimize", tags=["Optimization"])
+app.include_router(results.router, prefix="/api/results", tags=["Results"])
+app.include_router(performance.router, prefix="/api/performance", tags=["Performance"])
+app.include_router(websocket.router, prefix="/ws", tags=["WebSocket"])
 
 
 @app.get("/api/info", tags=["Info"])
 async def api_info():
-    """
-    Get API information and available endpoints.
-    """
+    """Get API information and available endpoints."""
     return {
         "platform": "Edge AI AutoML Platform",
         "version": "1.0.0",
@@ -156,15 +150,14 @@ async def api_info():
 
 if __name__ == "__main__":
     import uvicorn
-    import os
 
-    # Use PORT from environment (Render provides this)
-    port = int(os.getenv("PORT", 8000))
+    port = int(os.getenv("PORT", "8000"))
+    logger.info(f"Starting server on port {port}")
     
     uvicorn.run(
         "src.main:app", 
         host="0.0.0.0", 
         port=port, 
-        reload=False,  # Disable reload in production
+        reload=False,
         log_level="info"
     )
