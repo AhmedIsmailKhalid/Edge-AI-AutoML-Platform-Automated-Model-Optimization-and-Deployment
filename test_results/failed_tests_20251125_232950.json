@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-11-25T23:29:50.149766",
+  "total_tests": 4,
+  "passed": 3,
+  "failed": 1,
+  "errors": 0,
+  "execution_time": 213.05299043655396,
+  "results": [
+    {
+      "test_id": 41,
+      "test_name": "PyTorch + CIFAR10",
+      "status": "FAILED",
+      "error": "Optimization failed: Failed to load model: Failed to load PyTorch model. Error: Model is a state_dict but architecture is not available. Please provide a TorchScript (.pt) model or full model object.\nThe model class definition may not be available. Please ensure the model is saved as TorchScript (.pt) or as a complete object that can be loaded independently.",
+      "execution_time": 9.20006251335144,
+      "experiment_id": "460acde5-d2ee-4092-9ff7-64699bbc1947",
+      "completed_techniques": 0,
+      "failed_techniques": 0
+    },
+    {
+      "test_id": 42,
+      "test_name": "TensorFlow + CIFAR10",
+      "status": "PASSED",
+      "error": null,
+      "execution_time": 59.93185806274414,
+      "experiment_id": "66190378-8541-40cb-8adc-8d710f5ed39f",
+      "completed_techniques": 6,
+      "failed_techniques": 0
+    },
+    {
+      "test_id": 50,
+      "test_name": "Invalid Constraint Values",
+      "status": "PASSED",
+      "error": "Correctly rejected invalid constraints \u2705",
+      "execution_time": 2.0334508419036865,
+      "experiment_id": null,
+      "completed_techniques": 0,
+      "failed_techniques": 0
+    },
+    {
+      "test_id": 54,
+      "test_name": "High Accuracy Requirement",
+      "status": "PASSED",
+      "error": null,
+      "execution_time": 133.86507272720337,
+      "experiment_id": "50fab828-0d5e-4912-bac1-946cbeb23fdc",
+      "completed_techniques": 6,
+      "failed_techniques": 0
+    }
+  ]
+}

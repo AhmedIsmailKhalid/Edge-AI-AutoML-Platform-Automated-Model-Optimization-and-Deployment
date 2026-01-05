@@ -1,0 +1,50 @@
+{
+  "timestamp": "2025-11-26T00:24:51.430982",
+  "total_tests": 4,
+  "passed": 4,
+  "failed": 0,
+  "errors": 0,
+  "execution_time": 283.78580927848816,
+  "results": [
+    {
+      "test_id": 41,
+      "test_name": "PyTorch + CIFAR10",
+      "status": "PASSED",
+      "error": null,
+      "execution_time": 36.34511613845825,
+      "experiment_id": "732c91c1-59cc-446b-abc6-77c185849414",
+      "completed_techniques": 3,
+      "failed_techniques": 3
+    },
+    {
+      "test_id": 42,
+      "test_name": "TensorFlow + CIFAR10",
+      "status": "PASSED",
+      "error": null,
+      "execution_time": 59.88132190704346,
+      "experiment_id": "f062ea7a-4bf3-4c78-a4b0-2772bfa4f1d2",
+      "completed_techniques": 6,
+      "failed_techniques": 0
+    },
+    {
+      "test_id": 50,
+      "test_name": "Invalid Constraint Values",
+      "status": "PASSED",
+      "error": "Correctly rejected invalid constraints \u2705",
+      "execution_time": 2.0302181243896484,
+      "experiment_id": null,
+      "completed_techniques": 0,
+      "failed_techniques": 0
+    },
+    {
+      "test_id": 54,
+      "test_name": "High Accuracy Requirement",
+      "status": "PASSED",
+      "error": null,
+      "execution_time": 177.48813247680664,
+      "experiment_id": "1d0c0e08-4b2d-4363-b221-6cf5ff3fa4b4",
+      "completed_techniques": 6,
+      "failed_techniques": 0
+    }
+  ]
+}
