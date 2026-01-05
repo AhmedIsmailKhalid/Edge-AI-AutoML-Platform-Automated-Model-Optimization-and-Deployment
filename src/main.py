@@ -156,5 +156,15 @@ async def api_info():
 
 if __name__ == "__main__":
     import uvicorn
+    import os
 
-    uvicorn.run("src.main:app", host="0.0.0.0", port=8000, reload=True, log_level="info")
+    # Use PORT from environment (Render provides this)
+    port = int(os.getenv("PORT", 8000))
+    
+    uvicorn.run(
+        "src.main:app", 
+        host="0.0.0.0", 
+        port=port, 
+        reload=False,  # Disable reload in production
+        log_level="info"
+    )
