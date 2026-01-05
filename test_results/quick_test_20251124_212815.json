@@ -1,0 +1,140 @@
+{
+  "timestamp": "2025-11-24T21:28:15.418895",
+  "total_tests": 13,
+  "passed": 8,
+  "failed": 5,
+  "errors": 0,
+  "execution_time": 724.2526984214783,
+  "results": [
+    {
+      "test_id": 1,
+      "test_name": "PyTorch + Custom Upload",
+      "status": "PASSED",
+      "error": null,
+      "execution_time": 88.2764823436737,
+      "experiment_id": "bcd1d262-1abd-4e1a-8846-30ecbd4e1392",
+      "completed_techniques": 3,
+      "failed_techniques": 3
+    },
+    {
+      "test_id": 36,
+      "test_name": "Jetson Xavier NX + TensorFlow",
+      "status": "PASSED",
+      "error": null,
+      "execution_time": 152.73296666145325,
+      "experiment_id": "83c1159c-5b5a-4cde-b8f8-f9b13cbcb43c",
+      "completed_techniques": 6,
+      "failed_techniques": 0
+    },
+    {
+      "test_id": 37,
+      "test_name": "Coral Dev Board + PyTorch",
+      "status": "PASSED",
+      "error": null,
+      "execution_time": 41.72981858253479,
+      "experiment_id": "ad9d0a12-1aab-4f45-907c-c28b8a90985e",
+      "completed_techniques": 3,
+      "failed_techniques": 3
+    },
+    {
+      "test_id": 38,
+      "test_name": "Coral Dev Board + TensorFlow",
+      "status": "PASSED",
+      "error": null,
+      "execution_time": 56.60371160507202,
+      "experiment_id": "27a1802e-33d7-4b05-86eb-7318508d10b0",
+      "completed_techniques": 6,
+      "failed_techniques": 0
+    },
+    {
+      "test_id": 41,
+      "test_name": "PyTorch + CIFAR10",
+      "status": "FAILED",
+      "error": "No techniques completed successfully",
+      "execution_time": 14.532573223114014,
+      "experiment_id": "cf70c4b4-6271-4788-9575-ec3355f38b7a",
+      "completed_techniques": 0,
+      "failed_techniques": 6
+    },
+    {
+      "test_id": 42,
+      "test_name": "TensorFlow + CIFAR10",
+      "status": "FAILED",
+      "error": "No techniques completed successfully",
+      "execution_time": 15.6924409866333,
+      "experiment_id": "e5841847-bec4-4b11-832e-acf9ebfceb80",
+      "completed_techniques": 0,
+      "failed_techniques": 6
+    },
+    {
+      "test_id": 43,
+      "test_name": "PyTorch + Fashion-MNIST",
+      "status": "PASSED",
+      "error": null,
+      "execution_time": 56.676119327545166,
+      "experiment_id": "939655ec-452b-4a84-aa7a-bf1d02027789",
+      "completed_techniques": 3,
+      "failed_techniques": 3
+    },
+    {
+      "test_id": 44,
+      "test_name": "TensorFlow + Fashion-MNIST",
+      "status": "FAILED",
+      "error": "Optimization failed: Unknown dataset: fashion_mnist",
+      "execution_time": 9.270307779312134,
+      "experiment_id": "c12a2f5f-17ef-4632-ab4d-b529b87b58ce",
+      "completed_techniques": 0,
+      "failed_techniques": 0
+    },
+    {
+      "test_id": 50,
+      "test_name": "Invalid Constraint Values",
+      "status": "FAILED",
+      "error": "Create experiment failed: HTTP 422: {\"detail\":[{\"type\":\"greater_than_equal\",\"loc\":[\"body\",\"max_accuracy_drop_percent\"],\"msg\":\"Input should be greater than or equal to 0\",\"input\":-10.0,\"ctx\":{\"ge\":0.0},\"url\":\"https://errors.pydantic.dev/2.12/v/greater_than_equal\"}]}",
+      "execution_time": 2.0465691089630127,
+      "experiment_id": null,
+      "completed_techniques": 0,
+      "failed_techniques": 0
+    },
+    {
+      "test_id": 52,
+      "test_name": "Production Deployment Scenario",
+      "status": "PASSED",
+      "error": null,
+      "execution_time": 154.016583442688,
+      "experiment_id": "75642a04-b865-4d64-93fe-1a2305024fb6",
+      "completed_techniques": 6,
+      "failed_techniques": 0
+    },
+    {
+      "test_id": 53,
+      "test_name": "Edge IoT Scenario",
+      "status": "PASSED",
+      "error": null,
+      "execution_time": 41.544336795806885,
+      "experiment_id": "4565d3fa-9c54-4c9c-b176-9e3185109251",
+      "completed_techniques": 3,
+      "failed_techniques": 3
+    },
+    {
+      "test_id": 54,
+      "test_name": "High Accuracy Requirement",
+      "status": "FAILED",
+      "error": "No techniques completed successfully",
+      "execution_time": 16.097126007080078,
+      "experiment_id": "77c3fb8b-033f-4150-9e61-7d2ae55d228e",
+      "completed_techniques": 0,
+      "failed_techniques": 6
+    },
+    {
+      "test_id": 55,
+      "test_name": "Resource-Constrained Scenario",
+      "status": "PASSED",
+      "error": null,
+      "execution_time": 49.013038635253906,
+      "experiment_id": "0c5503c7-a7b5-428b-a846-4fe8a8857cfb",
+      "completed_techniques": 3,
+      "failed_techniques": 3
+    }
+  ]
+}
