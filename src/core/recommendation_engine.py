@@ -346,14 +346,18 @@ class RecommendationEngine:
         metrics = {
             "original_size_mb": result.original_size_mb,
             "optimized_size_mb": result.optimized_size_mb,
-            "compression_ratio": result.original_size_mb / result.optimized_size_mb
-            if result.optimized_size_mb > 0
-            else 0,
+            "compression_ratio": (
+                result.original_size_mb / result.optimized_size_mb
+                if result.optimized_size_mb > 0
+                else 0
+            ),
             "original_accuracy": result.original_accuracy,
             "optimized_accuracy": result.optimized_accuracy,
-            "accuracy_retention": result.optimized_accuracy / result.original_accuracy
-            if result.original_accuracy > 0
-            else 1.0,
+            "accuracy_retention": (
+                result.optimized_accuracy / result.original_accuracy
+                if result.original_accuracy > 0
+                else 1.0
+            ),
             "execution_time_seconds": run.execution_time_seconds,
         }
 

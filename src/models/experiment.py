@@ -6,8 +6,7 @@ import enum
 from datetime import datetime
 from uuid import uuid4
 
-from sqlalchemy import Column, DateTime, Float, Integer, String, Text
-from sqlalchemy import Enum as SQLEnum
+from sqlalchemy import Column, DateTime, Enum as SQLEnum, Float, Integer, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 

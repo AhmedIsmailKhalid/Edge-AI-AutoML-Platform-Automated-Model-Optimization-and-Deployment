@@ -184,15 +184,17 @@ async def stream_progress(
                     event_data = {
                         "type": "technique_update",
                         "technique": run.technique_name,
-                        "status": run.status.value
-                        if hasattr(run.status, "value")
-                        else str(run.status),
-                        "accuracy": float(run.optimized_accuracy)
-                        if run.optimized_accuracy
-                        else None,
-                        "size_reduction": float(run.size_reduction_percent)
-                        if run.size_reduction_percent
-                        else None,
+                        "status": (
+                            run.status.value if hasattr(run.status, "value") else str(run.status)
+                        ),
+                        "accuracy": (
+                            float(run.optimized_accuracy) if run.optimized_accuracy else None
+                        ),
+                        "size_reduction": (
+                            float(run.size_reduction_percent)
+                            if run.size_reduction_percent
+                            else None
+                        ),
                     }
 
                     yield f"data: {json.dumps(event_data)}\n\n"
@@ -205,9 +207,11 @@ async def stream_progress(
                 event_data = {
                     "type": "progress",
                     "progress": progress,
-                    "status": experiment.status.value
-                    if hasattr(experiment.status, "value")
-                    else str(experiment.status),
+                    "status": (
+                        experiment.status.value
+                        if hasattr(experiment.status, "value")
+                        else str(experiment.status)
+                    ),
                 }
 
                 yield f"data: {json.dumps(event_data)}\n\n"
@@ -216,9 +220,11 @@ async def stream_progress(
             if experiment.status in [ExperimentStatus.COMPLETED, ExperimentStatus.FAILED]:
                 event_data = {
                     "type": "complete",
-                    "status": experiment.status.value
-                    if hasattr(experiment.status, "value")
-                    else str(experiment.status),
+                    "status": (
+                        experiment.status.value
+                        if hasattr(experiment.status, "value")
+                        else str(experiment.status)
+                    ),
                 }
                 yield f"data: {json.dumps(event_data)}\n\n"
                 break

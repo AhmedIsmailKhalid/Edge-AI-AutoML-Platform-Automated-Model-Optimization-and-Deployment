@@ -106,9 +106,11 @@ class KnowledgeDistillationPyTorch(BaseOptimization):
                 else:
                     student_layers.append(
                         nn.Linear(
-                            in_features
-                            if len(student_layers) == 0
-                            else int(in_features * self.student_scale),
+                            (
+                                in_features
+                                if len(student_layers) == 0
+                                else int(in_features * self.student_scale)
+                            ),
                             int(out_features * self.student_scale),
                         )
                     )
@@ -123,9 +125,11 @@ class KnowledgeDistillationPyTorch(BaseOptimization):
 
                 student_layers.append(
                     nn.Conv2d(
-                        in_channels
-                        if len(student_layers) == 0
-                        else int(in_channels * self.student_scale),
+                        (
+                            in_channels
+                            if len(student_layers) == 0
+                            else int(in_channels * self.student_scale)
+                        ),
                         int(out_channels * self.student_scale),
                         kernel_size=kernel_size,
                         stride=stride,

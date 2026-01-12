@@ -235,7 +235,9 @@ def load_pytorch_custom_dataset(dataset_path: str, batch_size: int = 32) -> Data
         num_workers=0,
     )
 
-    print(f"✅ Loaded PyTorch custom dataset: {len(dataset)} images, {len(dataset.classes)} classes")
+    print(
+        f"✅ Loaded PyTorch custom dataset: {len(dataset)} images, {len(dataset.classes)} classes"
+    )
 
     return dataloader
 

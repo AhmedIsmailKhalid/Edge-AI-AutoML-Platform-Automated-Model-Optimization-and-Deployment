@@ -2,6 +2,7 @@
 Quick test script to verify FastAPI app starts correctly.
 Run this before implementing endpoints.
 """
+
 # ruff : noqa : E402
 
 import sys

@@ -55,9 +55,11 @@ def validate_file_exists(file_path: Path, file_type: str = "File") -> None:
     if not file_path.exists():
         raise ValidationError(
             message=f"{file_type} not found: {file_path}",
-            code=ErrorCode.MODEL_NOT_FOUND
-            if "model" in file_type.lower()
-            else ErrorCode.DATASET_NOT_FOUND,
+            code=(
+                ErrorCode.MODEL_NOT_FOUND
+                if "model" in file_type.lower()
+                else ErrorCode.DATASET_NOT_FOUND
+            ),
             details={"file_path": str(file_path)},
         )
 

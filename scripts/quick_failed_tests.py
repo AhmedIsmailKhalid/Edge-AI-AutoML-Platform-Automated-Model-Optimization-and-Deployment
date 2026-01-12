@@ -591,9 +591,7 @@ def main():
         status_icon = (
             "[PASS]"
             if result["status"] == "PASSED"
-            else "[FAIL]"
-            if result["status"] == "FAILED"
-            else "[ERR] "
+            else "[FAIL]" if result["status"] == "FAILED" else "[ERR] "
         )
         print(f"\n{status_icon} Test {result['test_id']:03d}: {result['test_name']}")
         print(f"   Time: {result['execution_time']:.1f}s")

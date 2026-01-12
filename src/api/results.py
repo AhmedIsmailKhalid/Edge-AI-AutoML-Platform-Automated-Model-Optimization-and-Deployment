@@ -40,20 +40,24 @@ async def get_optimization_results(experiment_id: UUID, db: Session = Depends(ge
             "status": run.status.value if hasattr(run.status, "value") else str(run.status),
             "original_accuracy": float(run.original_accuracy) if run.original_accuracy else None,
             "optimized_accuracy": float(run.optimized_accuracy) if run.optimized_accuracy else None,
-            "accuracy_drop_percent": float(run.accuracy_drop_percent)
-            if run.accuracy_drop_percent
-            else None,
+            "accuracy_drop_percent": (
+                float(run.accuracy_drop_percent) if run.accuracy_drop_percent else None
+            ),
             "original_size_mb": float(run.original_size_mb) if run.original_size_mb else None,
             "optimized_size_mb": float(run.optimized_size_mb) if run.optimized_size_mb else None,
-            "size_reduction_percent": float(run.size_reduction_percent)
-            if run.size_reduction_percent
-            else None,
-            "inference_latency_ms": float(getattr(run, "inference_latency_ms", None))
-            if getattr(run, "inference_latency_ms", None)
-            else None,
-            "memory_usage_mb": float(getattr(run, "memory_usage_mb", None))
-            if getattr(run, "memory_usage_mb", None)
-            else None,
+            "size_reduction_percent": (
+                float(run.size_reduction_percent) if run.size_reduction_percent else None
+            ),
+            "inference_latency_ms": (
+                float(getattr(run, "inference_latency_ms", None))
+                if getattr(run, "inference_latency_ms", None)
+                else None
+            ),
+            "memory_usage_mb": (
+                float(getattr(run, "memory_usage_mb", None))
+                if getattr(run, "memory_usage_mb", None)
+                else None
+            ),
             "execution_order": run.execution_order,
             "created_at": run.created_at.isoformat() if run.created_at else None,
             "completed_at": run.completed_at.isoformat() if run.completed_at else None,
