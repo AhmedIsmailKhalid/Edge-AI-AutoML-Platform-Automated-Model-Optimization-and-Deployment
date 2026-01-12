@@ -14,6 +14,7 @@ from src.api import experiments, optimize, performance, results, upload, websock
 from src.config import settings
 from src.database import Base, engine
 
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"

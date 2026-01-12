@@ -9,6 +9,7 @@ from src.utils.file_handler import (
     validate_model_file,
 )
 
+
 __all__ = [
     "save_uploaded_file",
     "get_file_size_mb",

@@ -17,6 +17,7 @@ from src.models.model_file import ModelFile
 from src.schemas.upload import ModelUploadResponse
 from src.utils.file_handler import calculate_checksum, save_uploaded_file, validate_model_file
 
+
 router = APIRouter()
 
 logger = logging.getLogger(__name__)
