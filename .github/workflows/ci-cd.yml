@@ -1,7 +1,6 @@
 name: CI/CD Pipeline
 
 on:
-  workflow_dispatch:
   push:
     branches: [main, develop]
   pull_request:
@@ -12,152 +11,102 @@ permissions:
   packages: write
 
 env:
-  GIT_LFS_SKIP_SMUDGE: 1
   PYTHON_VERSION: '3.11'
   NODE_VERSION: '20'
 
 jobs:
-  # ============================================
-  # Backend Linting and Formatting
-  # ============================================
   backend-lint:
     name: Backend Code Quality
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code (no LFS)
+      - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          lfs: false
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ruff black
+          pip install ruff black isort
+      - name: Run Ruff
+        run: ruff check src/ --output-format=github
+      - name: Check Black
+        run: black --check src/
+      - name: Check isort
+        run: isort --check-only src/
 
-      - name: Run Ruff (lint + import sorting)
-        run: |
-          echo "Running Ruff linter..."
-          ruff check src/ --output-format=github
-
-      - name: Check Black (formatting)
-        run: |
-          echo "Checking code formatting with Black..."
-          black --check src/
-
-  # ============================================
-  # Frontend Linting and Formatting
-  # ============================================
   frontend-lint:
     name: Frontend Code Quality
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code (no LFS)
+      - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          lfs: false
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
-
       - name: Install dependencies
         working-directory: ./frontend
         run: npm ci
-
       - name: Run ESLint
         working-directory: ./frontend
-        run: |
-          echo "Running ESLint..."
-          npm run lint
-
+        run: npm run lint
       - name: Check Prettier
         working-directory: ./frontend
-        run: |
-          echo "Checking code formatting with Prettier..."
-          npx prettier --check "src/**/*.{js,jsx,ts,tsx,css,json}"
+        run: npx prettier --check "src/**/*.{js,jsx,ts,tsx,css,json}"
 
-  # ============================================
-  # Backend Tests
-  # ============================================
   backend-test:
     name: Backend Tests
     runs-on: ubuntu-latest
     needs: backend-lint
-
     steps:
-      - name: Checkout code (no LFS)
+      - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          lfs: false
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install -r requirements-dev.txt
-
       - name: Run tests
-        run: |
-          echo "Running pytest..."
-          pytest tests/ -v --cov=src --cov-report=xml --cov-report=term
+        run: pytest tests/ -v --cov=src --cov-report=xml --cov-report=term
         continue-on-error: true
-
-      - name: Upload coverage reports
+      - name: Upload coverage
         uses: codecov/codecov-action@v4
         with:
           file: ./coverage.xml
           flags: backend
-          name: backend-coverage
         continue-on-error: true
 
-  # ============================================
-  # Build & Push Docker Image (Docker Hub + GHCR)
-  # ============================================
   build-docker:
     name: Build Docker Image
     runs-on: ubuntu-latest
     needs: [backend-lint, frontend-lint]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
     steps:
-      - name: Checkout code (no LFS)
+      - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          lfs: false
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Log in to GitHub Container Registry
+      - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -169,8 +118,7 @@ jobs:
             type=ref,event=branch
             type=sha,prefix={{branch}}-
             type=raw,value=latest,enable={{is_default_branch}}
-
-      - name: Build and push Docker image
+      - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -182,20 +130,71 @@ jobs:
           cache-to: type=gha,mode=max
           platforms: linux/amd64
 
-  # ============================================
-  # Notification (Optional)
-  # ============================================
+  deploy-hf-spaces:
+    name: Deploy to Hugging Face Spaces
+    runs-on: ubuntu-latest
+    needs: build-docker
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code (skip LFS)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: false
+      - name: Set up Git
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+      - name: Push to HF Spaces
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_SPACE: ${{ secrets.HF_SPACE }}
+        run: |
+          echo "Deploying to Hugging Face Spaces..."
+          git remote add hf https://huggingface.co/spaces/${{ secrets.HF_SPACE }} || true
+          git config credential.helper store
+          echo "https://user:$HF_TOKEN@huggingface.co" > ~/.git-credentials
+          git push https://user:$HF_TOKEN@huggingface.co/spaces/${{ secrets.HF_SPACE }} main:main --force
+          echo "✅ Deployment completed!"
+
   notify:
     name: Send Notifications
     runs-on: ubuntu-latest
-    needs: [build-docker]
+    needs: [build-docker, deploy-hf-spaces]
     if: always()
-
     steps:
       - name: Notification
         run: |
-          if [ "${{ needs.build-docker.result }}" == "success" ]; then
-            echo "✅ Build/push successful!"
+          if [ "${{ needs.deploy-hf-spaces.result }}" == "success" ]; then
+            echo "✅ Deployment successful!"
           else
-            echo "❌ Build/push failed!"
+            echo "❌ Deployment failed!"
           fi
+```
+
+---
+
+## **Summary**
+
+**Your Understanding:** ❌ "HF Spaces auto-detects Docker Hub updates"  
+**Reality:** ✅ "HF Spaces rebuilds when you push to its Git repo"
+
+**The Complete Flow:**
+```
+GitHub (main branch push)
+  ↓
+GitHub Actions CI/CD
+  ├─ Lint code
+  ├─ Run tests
+  ├─ Build Docker image → Push to Docker Hub
+  └─ Push code to HF Spaces Git repo ← THIS TRIGGERS REBUILD
+       ↓
+HF Spaces detects Git push
+  ↓
+HF Spaces rebuilds
+  ↓
+Dockerfile: FROM ahmedik95316/edge-ai-automl:latest
+  ↓
+Pulls latest image from Docker Hub
+  ↓
+✅ App updated with latest code!
