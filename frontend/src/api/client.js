@@ -26,11 +26,15 @@ apiClient.interceptors.request.use(
 // Response interceptor
 apiClient.interceptors.response.use(
   (response) => {
-    console.log(`✅ ${response.config.method.toUpperCase()} ${response.config.url} - ${response.status}`);
+    console.log(
+      `✅ ${response.config.method.toUpperCase()} ${response.config.url} - ${response.status}`
+    );
     return response;
   },
   (error) => {
-    console.error(`❌ ${error.config?.method?.toUpperCase()} ${error.config?.url} - ${error.response?.status || 'Network Error'}`);
+    console.error(
+      `❌ ${error.config?.method?.toUpperCase()} ${error.config?.url} - ${error.response?.status || 'Network Error'}`
+    );
     return Promise.reject(error);
   }
 );
@@ -42,9 +46,9 @@ export const api = {
   getExperiment: (id) => apiClient.get(`/api/experiments/${id}`),
   getRecentExperiments: (limit = 20) => apiClient.get(`/api/experiments/recent?limit=${limit}`),
   searchExperiments: (params) => apiClient.get('/api/experiments/search', { params }),
-  
+
   // Upload
-  uploadModel: (experimentId, formData) => 
+  uploadModel: (experimentId, formData) =>
     apiClient.post(`/api/upload/${experimentId}/model`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
       timeout: 300000, // 5 minutes for file uploads
@@ -54,14 +58,12 @@ export const api = {
       headers: { 'Content-Type': 'multipart/form-data' },
       timeout: 300000, // 5 minutes for file uploads
     }),
-  
+
   // Optimization
-  startOptimization: (experimentId) => 
-    apiClient.post(`/api/optimize/${experimentId}/start`),
-  
+  startOptimization: (experimentId) => apiClient.post(`/api/optimize/${experimentId}/start`),
+
   // Results
-  getResults: (experimentId) => 
-    apiClient.get(`/api/results/${experimentId}/results`),
+  getResults: (experimentId) => apiClient.get(`/api/results/${experimentId}/results`),
   getRecommendations: (experimentId) =>
     apiClient.get(`/api/results/${experimentId}/recommendations`),
   downloadModel: (experimentId, techniqueName) =>

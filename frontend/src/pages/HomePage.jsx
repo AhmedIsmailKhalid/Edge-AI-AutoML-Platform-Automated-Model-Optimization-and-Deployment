@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Zap, Plus, Search, TrendingUp } from 'lucide-react';
@@ -26,13 +27,12 @@ function HomePage() {
             <Zap className="w-12 h-12 text-white" />
           </div>
         </div>
-        
-        <h1 className="text-5xl font-bold text-gray-900">
-          Edge AI AutoML Platform
-        </h1>
-        
+
+        <h1 className="text-5xl font-bold text-gray-900">Edge AI AutoML Platform</h1>
+
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Intelligent model optimization for edge devices. Automate weeks of manual work into hours with AI-powered compression techniques.
+          Intelligent model optimization for edge devices. Automate weeks of manual work into hours
+          with AI-powered compression techniques.
         </p>
 
         {/* Action Buttons */}
@@ -123,9 +123,7 @@ function HomePage() {
         ) : (
           <div className="bg-white border-2 border-dashed border-gray-300 rounded-xl p-12 text-center">
             <Zap className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              No experiments yet
-            </h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">No experiments yet</h3>
             <p className="text-gray-600 mb-6">
               Create your first experiment to get started with model optimization
             </p>

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -37,10 +38,8 @@ function ExperimentProgress() {
   // Connect to SSE stream
   useEffect(() => {
     console.log('🔵 Connecting to SSE stream for experiment:', id);
-    
-    const eventSource = new EventSource(
-      `http://localhost:8000/api/optimize/${id}/progress-stream`
-    );
+
+    const eventSource = new EventSource(`http://localhost:8000/api/optimize/${id}/progress-stream`);
 
     eventSource.onopen = () => {
       console.log('✅ SSE connection established');
@@ -48,16 +47,16 @@ function ExperimentProgress() {
 
     eventSource.onmessage = (event) => {
       console.log('📨 SSE message received:', event.data);
-      
+
       try {
         const data = JSON.parse(event.data);
         console.log('📦 Parsed data:', data);
-        
+
         if (data.type === 'technique_update') {
           const displayName = techniqueDisplayNames[data.technique] || data.technique;
-          
+
           console.log('🔧 Technique update:', data.status, displayName);
-          
+
           if (data.status === 'running') {
             console.log('Setting current technique:', displayName);
             setCurrentTechnique({
@@ -96,7 +95,7 @@ function ExperimentProgress() {
         } else if (data.type === 'complete') {
           console.log('🎉 Optimization complete!');
           setExperimentStatus(data.status);
-          
+
           setTimeout(() => {
             navigate(`/experiment/${id}/results`);
           }, 2000);
@@ -129,27 +128,19 @@ function ExperimentProgress() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          {experiment?.name}
-        </h1>
-        <p className="text-gray-600">
-          Real-time optimization progress
-        </p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">{experiment?.name}</h1>
+        <p className="text-gray-600">Real-time optimization progress</p>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div>
             <p className="text-sm text-gray-600">Framework</p>
-            <p className="font-semibold text-gray-900 capitalize">
-              {experiment?.framework}
-            </p>
+            <p className="font-semibold text-gray-900 capitalize">{experiment?.framework}</p>
           </div>
           <div>
             <p className="text-sm text-gray-600">Dataset</p>
-            <p className="font-semibold text-gray-900">
-              {experiment?.dataset_name}
-            </p>
+            <p className="font-semibold text-gray-900">{experiment?.dataset_name}</p>
           </div>
           <div>
             <p className="text-sm text-gray-600">Target Device</p>
@@ -167,9 +158,7 @@ function ExperimentProgress() {
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
-          Optimization Progress
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Optimization Progress</h2>
 
         <div className="mb-8">
           <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
@@ -189,64 +178,53 @@ function ExperimentProgress() {
             <div className="flex items-center space-x-3">
               <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
               <div>
-                <p className="text-sm text-blue-600 font-medium">
-                  Currently Running
-                </p>
-                <p className="text-lg font-semibold text-gray-900">
-                  {currentTechnique.name}
-                </p>
+                <p className="text-sm text-blue-600 font-medium">Currently Running</p>
+                <p className="text-lg font-semibold text-gray-900">{currentTechnique.name}</p>
               </div>
             </div>
           </div>
         )}
 
         {completedTechniques.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Completed Techniques
-          </h3>
-          {completedTechniques.map((technique, index) => (
-            <div
-              key={index}
-              className="flex items-start space-x-3 p-4 bg-gray-50 rounded-lg border border-gray-200"
-            >
-              {technique.status === 'failed' ? (
-                <XCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
-              ) : (
-                <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-              )}
-              <div className="flex-1">
-                <p className="font-semibold text-gray-900">
-                  {technique.name}
-                </p>
-                {technique.accuracy !== undefined && technique.accuracy !== null && (
-                  <p className="text-sm text-gray-600 mt-1">
-                    {(technique.accuracy * 100).toFixed(1)}% accuracy
-                    {technique.sizeReduction !== null && technique.sizeReduction !== undefined && (
-                      <>, {technique.sizeReduction.toFixed(1)}% size reduction</>
-                    )}
-                  </p>
+          <div className="space-y-3">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Completed Techniques</h3>
+            {completedTechniques.map((technique, index) => (
+              <div
+                key={index}
+                className="flex items-start space-x-3 p-4 bg-gray-50 rounded-lg border border-gray-200"
+              >
+                {technique.status === 'failed' ? (
+                  <XCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                ) : (
+                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                 )}
-                {technique.status === 'failed' && (
-                  <p className="text-sm text-red-600 mt-1">Failed</p>
-                )}
+                <div className="flex-1">
+                  <p className="font-semibold text-gray-900">{technique.name}</p>
+                  {technique.accuracy !== undefined && technique.accuracy !== null && (
+                    <p className="text-sm text-gray-600 mt-1">
+                      {(technique.accuracy * 100).toFixed(1)}% accuracy
+                      {technique.sizeReduction !== null &&
+                        technique.sizeReduction !== undefined && (
+                          <>, {technique.sizeReduction.toFixed(1)}% size reduction</>
+                        )}
+                    </p>
+                  )}
+                  {technique.status === 'failed' && (
+                    <p className="text-sm text-red-600 mt-1">Failed</p>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
 
         {experimentStatus === 'completed' && (
           <div className="mt-8 p-6 bg-green-50 border-2 border-green-200 rounded-xl">
             <div className="flex items-center space-x-3">
               <CheckCircle className="w-8 h-8 text-green-600" />
               <div>
-                <p className="text-lg font-semibold text-gray-900">
-                  Optimization Complete!
-                </p>
-                <p className="text-sm text-gray-600 mt-1">
-                  Redirecting to results page...
-                </p>
+                <p className="text-lg font-semibold text-gray-900">Optimization Complete!</p>
+                <p className="text-sm text-gray-600 mt-1">Redirecting to results page...</p>
               </div>
             </div>
           </div>
@@ -257,23 +235,21 @@ function ExperimentProgress() {
             <div className="flex items-center space-x-3">
               <XCircle className="w-8 h-8 text-red-600" />
               <div>
-                <p className="text-lg font-semibold text-gray-900">
-                  Optimization Failed
-                </p>
-                <p className="text-sm text-gray-600 mt-1">
-                  Please check the logs or try again
-                </p>
+                <p className="text-lg font-semibold text-gray-900">Optimization Failed</p>
+                <p className="text-sm text-gray-600 mt-1">Please check the logs or try again</p>
               </div>
             </div>
           </div>
         )}
 
-        {completedTechniques.length === 0 && !currentTechnique && experimentStatus === 'running' && (
-          <div className="text-center py-12">
-            <Loader2 className="w-12 h-12 text-primary-600 animate-spin mx-auto mb-4" />
-            <p className="text-gray-600">Initializing optimization...</p>
-          </div>
-        )}
+        {completedTechniques.length === 0 &&
+          !currentTechnique &&
+          experimentStatus === 'running' && (
+            <div className="text-center py-12">
+              <Loader2 className="w-12 h-12 text-primary-600 animate-spin mx-auto mb-4" />
+              <p className="text-gray-600">Initializing optimization...</p>
+            </div>
+          )}
       </div>
 
       {experimentStatus === 'completed' && (

@@ -1,86 +1,87 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Search, Filter, Calendar, Cpu, Target, TrendingUp } from 'lucide-react';
-import { api } from '../api/client';
+/* eslint-disable no-unused-vars */
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Calendar, Cpu, Filter, Search, Target, TrendingUp } from "lucide-react";
+
+import { api } from "../api/client";
 
 export default function ResultsViewer() {
   const navigate = useNavigate();
+
   const [experiments, setExperiments] = useState([]);
   const [filteredExperiments, setFilteredExperiments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+
+  const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState({
-    framework: 'all',
-    status: 'all',
-    device: 'all',
-    goal: 'all',
+    framework: "all",
+    status: "all",
+    device: "all",
+    goal: "all",
   });
-
-  useEffect(() => {
-    fetchAllExperiments();
-  }, []);
-
-  useEffect(() => {
-    applyFilters();
-  }, [searchQuery, filters, experiments]);
 
   const fetchAllExperiments = async () => {
     try {
       setLoading(true);
-      console.log('🔍 Fetching experiments...');
+      console.log("🔍 Fetching experiments...");
       const response = await api.getRecentExperiments(100);
-      console.log('📦 Received experiments:', response.data);
-      console.log('📊 Total experiments:', response.data.length);
+      console.log("📦 Received experiments:", response.data);
+      console.log("📊 Total experiments:", response.data.length);
       setExperiments(response.data);
     } catch (error) {
-      console.error('❌ Failed to fetch experiments:', error);
+      console.error("❌ Failed to fetch experiments:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const applyFilters = () => {
+  useEffect(() => {
+    fetchAllExperiments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     let filtered = [...experiments];
 
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
         (exp) =>
-          exp.name.toLowerCase().includes(query) ||
+          exp.name?.toLowerCase().includes(query) ||
           exp.description?.toLowerCase().includes(query) ||
           exp.model_name?.toLowerCase().includes(query)
       );
     }
 
-    if (filters.framework !== 'all') {
+    if (filters.framework !== "all") {
       filtered = filtered.filter((exp) => exp.framework === filters.framework);
     }
 
-    if (filters.status !== 'all') {
+    if (filters.status !== "all") {
       filtered = filtered.filter((exp) => exp.status === filters.status);
     }
 
-    if (filters.device !== 'all') {
+    if (filters.device !== "all") {
       filtered = filtered.filter((exp) => exp.target_device === filters.device);
     }
 
-    if (filters.goal !== 'all') {
+    if (filters.goal !== "all") {
       filtered = filtered.filter((exp) => exp.optimization_goal === filters.goal);
     }
 
     setFilteredExperiments(filtered);
-  };
+  }, [searchQuery, filters, experiments]);
 
   const handleFilterChange = (filterType, value) => {
-    setFilters({ ...filters, [filterType]: value });
+    setFilters((prev) => ({ ...prev, [filterType]: value }));
   };
 
   const getStatusBadge = (status) => {
     const statusStyles = {
-      pending: 'bg-gray-100 text-gray-800',
-      running: 'bg-blue-100 text-blue-800',
-      completed: 'bg-green-100 text-green-800',
-      failed: 'bg-red-100 text-red-800',
+      pending: "bg-gray-100 text-gray-800",
+      running: "bg-blue-100 text-blue-800",
+      completed: "bg-green-100 text-green-800",
+      failed: "bg-red-100 text-red-800",
     };
 
     return (
@@ -89,19 +90,19 @@ export default function ResultsViewer() {
           statusStyles[status] || statusStyles.pending
         }`}
       >
-        {status.charAt(0).toUpperCase() + status.slice(1)}
+        {status ? status.charAt(0).toUpperCase() + status.slice(1) : "Pending"}
       </span>
     );
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -109,7 +110,7 @@ export default function ResultsViewer() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto" />
           <p className="mt-4 text-gray-600">Loading experiments...</p>
         </div>
       </div>
@@ -151,7 +152,9 @@ export default function ResultsViewer() {
                 </label>
                 <select
                   value={filters.framework}
-                  onChange={(e) => handleFilterChange('framework', e.target.value)}
+                  onChange={(e) =>
+                    handleFilterChange("framework", e.target.value)
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="all">All Frameworks</option>
@@ -166,7 +169,7 @@ export default function ResultsViewer() {
                 </label>
                 <select
                   value={filters.status}
-                  onChange={(e) => handleFilterChange('status', e.target.value)}
+                  onChange={(e) => handleFilterChange("status", e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="all">All Statuses</option>
@@ -183,7 +186,7 @@ export default function ResultsViewer() {
                 </label>
                 <select
                   value={filters.device}
-                  onChange={(e) => handleFilterChange('device', e.target.value)}
+                  onChange={(e) => handleFilterChange("device", e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="all">All Devices</option>
@@ -202,7 +205,7 @@ export default function ResultsViewer() {
                 </label>
                 <select
                   value={filters.goal}
-                  onChange={(e) => handleFilterChange('goal', e.target.value)}
+                  onChange={(e) => handleFilterChange("goal", e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="all">All Goals</option>
@@ -219,7 +222,9 @@ export default function ResultsViewer() {
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
           {filteredExperiments.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-500">No experiments found matching your criteria.</p>
+              <p className="text-gray-500">
+                No experiments found matching your criteria.
+              </p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -249,63 +254,77 @@ export default function ResultsViewer() {
                     </th>
                   </tr>
                 </thead>
+
                 <tbody className="bg-white divide-y divide-gray-200">
                   {filteredExperiments.map((experiment) => (
                     <tr
                       key={experiment.id}
                       className="hover:bg-gray-50 cursor-pointer"
                       onClick={() => {
-                        if (experiment.status === 'completed') {
+                        if (experiment.status === "completed") {
                           navigate(`/experiment/${experiment.id}/results`);
-                        } else if (experiment.status === 'running') {
+                        } else if (experiment.status === "running") {
                           navigate(`/experiment/${experiment.id}/progress`);
                         }
                       }}
                     >
                       <td className="px-6 py-4">
-                        <div className="text-sm font-medium text-gray-900">{experiment.name}</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {experiment.name}
+                        </div>
                         {experiment.model_name && (
-                          <div className="text-sm text-gray-500">{experiment.model_name}</div>
+                          <div className="text-sm text-gray-500">
+                            {experiment.model_name}
+                          </div>
                         )}
                       </td>
+
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center text-sm text-gray-900">
                           <Cpu className="h-4 w-4 mr-1" />
                           {experiment.framework}
                         </div>
                       </td>
+
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center text-sm text-gray-900">
                           <Target className="h-4 w-4 mr-1" />
                           <span className="capitalize">
-                            {experiment.target_device.replace(/_/g, ' ')}
+                            {(experiment.target_device || "").replace(/_/g, " ")}
                           </span>
                         </div>
                       </td>
+
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center text-sm text-gray-900">
                           <TrendingUp className="h-4 w-4 mr-1" />
                           <span className="capitalize">
-                            {experiment.optimization_goal.replace(/_/g, ' ')}
+                            {(experiment.optimization_goal || "").replace(
+                              /_/g,
+                              " "
+                            )}
                           </span>
                         </div>
                       </td>
+
                       <td className="px-6 py-4 whitespace-nowrap">
                         {getStatusBadge(experiment.status)}
                       </td>
+
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center text-sm text-gray-500">
                           <Calendar className="h-4 w-4 mr-1" />
                           {formatDate(experiment.created_at)}
                         </div>
                       </td>
+
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            if (experiment.status === 'completed') {
+                            if (experiment.status === "completed") {
                               navigate(`/experiment/${experiment.id}/results`);
-                            } else if (experiment.status === 'running') {
+                            } else if (experiment.status === "running") {
                               navigate(`/experiment/${experiment.id}/progress`);
                             }
                           }}

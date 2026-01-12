@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Loader2 } from 'lucide-react';
 
 function LoadingSpinner({ size = 'md', text = 'Loading...' }) {

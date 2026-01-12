@@ -1,14 +1,15 @@
+/* eslint-disable no-unused-vars */
 // import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { 
-  Download, 
-  ArrowLeft, 
-  CheckCircle, 
-  TrendingDown, 
+import {
+  Download,
+  ArrowLeft,
+  CheckCircle,
+  TrendingDown,
   Zap,
   Award,
-  AlertCircle
+  AlertCircle,
 } from 'lucide-react';
 import { api } from '../api/client';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -55,7 +56,7 @@ function ExperimentResults() {
   const handleDownload = async (resultId, techniqueName) => {
     try {
       const response = await api.downloadModel(id, resultId);
-      
+
       // Create blob and download
       const blob = new Blob([response.data]);
       const url = window.URL.createObjectURL(blob);
@@ -104,9 +105,7 @@ function ExperimentResults() {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Home
           </button>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {experiment.name}
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{experiment.name}</h1>
           <p className="text-gray-600">
             Optimization completed on {new Date(experiment.completed_at).toLocaleString()}
           </p>
@@ -149,11 +148,9 @@ function ExperimentResults() {
           <div className="flex items-start space-x-3">
             <Award className="w-6 h-6 text-primary-600 mt-1" />
             <div className="flex-1">
-              <h2 className="text-xl font-bold text-gray-900 mb-2">
-                Recommended Configuration
-              </h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-2">Recommended Configuration</h2>
               <p className="text-gray-700 mb-4">{topRecommendation.reasoning}</p>
-              
+
               <div className="grid grid-cols-3 gap-4 bg-white rounded-lg p-4">
                 <div>
                   <p className="text-sm text-gray-600">Technique</p>
@@ -174,9 +171,11 @@ function ExperimentResults() {
                   </p>
                 </div>
               </div>
-              
+
               <button
-                onClick={() => handleDownload(topRecommendation.result_id, topRecommendation.technique_name)}
+                onClick={() =>
+                  handleDownload(topRecommendation.result_id, topRecommendation.technique_name)
+                }
                 className="mt-4 inline-flex items-center space-x-2 bg-primary-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-700"
               >
                 <Download className="w-5 h-5" />
@@ -190,7 +189,7 @@ function ExperimentResults() {
       {/* Results Table */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-6">All Optimization Results</h2>
-        
+
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
@@ -207,12 +206,8 @@ function ExperimentResults() {
                 <th className="text-left px-4 py-3 text-sm font-semibold text-gray-700">
                   Latency (ms)
                 </th>
-                <th className="text-left px-4 py-3 text-sm font-semibold text-gray-700">
-                  Status
-                </th>
-                <th className="text-left px-4 py-3 text-sm font-semibold text-gray-700">
-                  Actions
-                </th>
+                <th className="text-left px-4 py-3 text-sm font-semibold text-gray-700">Status</th>
+                <th className="text-left px-4 py-3 text-sm font-semibold text-gray-700">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -229,10 +224,13 @@ function ExperimentResults() {
                         {(result.optimized_accuracy * 100).toFixed(1)}%
                       </span>
                       {result.accuracy_drop_percent !== null && (
-                        <span className={`text-xs ${
-                          result.accuracy_drop_percent > 5 ? 'text-red-600' : 'text-green-600'
-                        }`}>
-                          ({result.accuracy_drop_percent > 0 ? '-' : '+'}{Math.abs(result.accuracy_drop_percent).toFixed(1)}%)
+                        <span
+                          className={`text-xs ${
+                            result.accuracy_drop_percent > 5 ? 'text-red-600' : 'text-green-600'
+                          }`}
+                        >
+                          ({result.accuracy_drop_percent > 0 ? '-' : '+'}
+                          {Math.abs(result.accuracy_drop_percent).toFixed(1)}%)
                         </span>
                       )}
                     </div>

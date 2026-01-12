@@ -1,4 +1,4 @@
-import { Clock, Cpu, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { Clock, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 
 function ExperimentCard({ experiment, onClick }) {
   const getStatusConfig = (status) => {
@@ -36,7 +36,6 @@ function ExperimentCard({ experiment, onClick }) {
   };
 
   const statusConfig = getStatusConfig(experiment.status);
-  const StatusIcon = statusConfig.icon;
 
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';

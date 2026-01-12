@@ -1,4 +1,5 @@
-@import "tailwindcss";
+/* eslint-disable */
+@import 'tailwindcss';
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {

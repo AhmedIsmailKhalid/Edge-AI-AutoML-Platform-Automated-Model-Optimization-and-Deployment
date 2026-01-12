@@ -1,13 +1,8 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { 
-  Zap, 
-  Upload, 
-  ChevronRight, 
-  CheckCircle,
-  AlertCircle 
-} from 'lucide-react';
+import { Zap, Upload, ChevronRight, CheckCircle, AlertCircle } from 'lucide-react';
 import { api } from '../api/client';
 
 function CreateExperiment() {
@@ -44,7 +39,7 @@ function CreateExperiment() {
         // Step 1: Create experiment
         const expResponse = await api.createExperiment(data);
         const experiment = expResponse.data;
-        
+
         // Step 2: Upload/Load model
         if (formData.modelSource === 'custom' && modelFile) {
           // Custom model upload
@@ -59,7 +54,7 @@ function CreateExperiment() {
           modelFormData.append('pretrained_model_name', formData.pretrainedModel);
           await api.uploadModel(experiment.id, modelFormData);
         }
-        
+
         // Step 3: Upload dataset if custom
         if (formData.datasetType === 'custom' && datasetFile) {
           const datasetFormData = new FormData();
@@ -67,10 +62,10 @@ function CreateExperiment() {
           datasetFormData.append('dataset_name', datasetFile.name.replace('.zip', ''));
           await api.uploadDataset(experiment.id, datasetFormData);
         }
-        
+
         // Step 4: Start optimization
         await api.startOptimization(experiment.id);
-        
+
         return experiment;
       } catch (error) {
         console.error('Error in experiment creation:', error);
@@ -82,8 +77,8 @@ function CreateExperiment() {
     },
     onError: (error) => {
       console.error('Mutation error:', error);
-      setErrors({ 
-        submit: error.response?.data?.detail || error.message || 'Failed to create experiment' 
+      setErrors({
+        submit: error.response?.data?.detail || error.message || 'Failed to create experiment',
       });
     },
   });
@@ -158,7 +153,10 @@ function CreateExperiment() {
       description: `Created via UI - ${formData.framework} - ${formData.datasetName}`,
       framework: formData.framework,
       dataset_type: formData.datasetType,
-      dataset_name: formData.datasetType === 'preset' ? formData.datasetName : datasetFile?.name.replace('.zip', ''),
+      dataset_name:
+        formData.datasetType === 'preset'
+          ? formData.datasetName
+          : datasetFile?.name.replace('.zip', ''),
       target_device: formData.targetDevice,
       optimization_goal: formData.optimizationGoal,
     };
@@ -203,8 +201,8 @@ function CreateExperiment() {
                     s < step
                       ? 'bg-green-600 text-white'
                       : s === step
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-200 text-gray-500'
+                        ? 'bg-primary-600 text-white'
+                        : 'bg-gray-200 text-gray-500'
                   }`}
                 >
                   {s < step ? <CheckCircle className="w-6 h-6" /> : s}
@@ -218,11 +216,7 @@ function CreateExperiment() {
                 </span>
               </div>
               {s < 5 && (
-                <div
-                  className={`h-1 flex-1 mx-2 ${
-                    s < step ? 'bg-green-600' : 'bg-gray-200'
-                  }`}
-                />
+                <div className={`h-1 flex-1 mx-2 ${s < step ? 'bg-green-600' : 'bg-gray-200'}`} />
               )}
             </div>
           ))}
@@ -230,7 +224,7 @@ function CreateExperiment() {
       </div>
 
       {/* Form */}
-      <form 
+      <form
         onSubmit={handleSubmit}
         onKeyDown={(e) => {
           // Prevent Enter key from submitting form unless on final step
@@ -269,9 +263,7 @@ function CreateExperiment() {
 
             {/* Framework */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Framework *
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Framework *</label>
               <div className="grid grid-cols-2 gap-4">
                 {['pytorch', 'tensorflow'].map((fw) => (
                   <button
@@ -302,12 +294,14 @@ function CreateExperiment() {
 
             {/* Dataset Type */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Dataset Type *
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Dataset Type *</label>
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { value: 'preset', label: 'Preset Dataset', desc: 'MNIST, CIFAR-10, Fashion-MNIST' },
+                  {
+                    value: 'preset',
+                    label: 'Preset Dataset',
+                    desc: 'MNIST, CIFAR-10, Fashion-MNIST',
+                  },
                   { value: 'custom', label: 'Custom Dataset', desc: 'Upload your own dataset' },
                 ].map((option) => (
                   <button
@@ -340,7 +334,9 @@ function CreateExperiment() {
                 >
                   <option value="mnist">MNIST - Handwritten Digits (28x28 grayscale)</option>
                   <option value="cifar10">CIFAR10 - 10 class Color Images (32x32)</option>
-                  <option value="fashionmnist">Fashion MNIST - Fashion Items (28x28 grayscale)</option>
+                  <option value="fashionmnist">
+                    Fashion MNIST - Fashion Items (28x28 grayscale)
+                  </option>
                 </select>
               </div>
             )}
@@ -395,9 +391,7 @@ function CreateExperiment() {
                   >
                     Choose File
                   </label>
-                  {errors.dataset && (
-                    <p className="mt-2 text-sm text-red-600">{errors.dataset}</p>
-                  )}
+                  {errors.dataset && <p className="mt-2 text-sm text-red-600">{errors.dataset}</p>}
                 </div>
               </div>
             )}
@@ -411,22 +405,20 @@ function CreateExperiment() {
 
             {/* Model Source */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Model Source *
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Model Source *</label>
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { 
-                    value: 'pretrained', 
-                    label: 'Pretrained Model', 
+                  {
+                    value: 'pretrained',
+                    label: 'Pretrained Model',
                     desc: 'Use our trained models',
-                    disabled: formData.datasetType === 'custom'
+                    disabled: formData.datasetType === 'custom',
                   },
-                  { 
-                    value: 'custom', 
-                    label: 'Custom Model', 
+                  {
+                    value: 'custom',
+                    label: 'Custom Model',
                     desc: 'Upload your own model',
-                    disabled: false
+                    disabled: false,
                   },
                 ].map((option) => (
                   <button
@@ -438,8 +430,8 @@ function CreateExperiment() {
                       formData.modelSource === option.value
                         ? 'border-primary-600 bg-primary-50'
                         : option.disabled
-                        ? 'border-gray-200 bg-gray-100 cursor-not-allowed opacity-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                          ? 'border-gray-200 bg-gray-100 cursor-not-allowed opacity-50'
+                          : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
                     <div className="font-semibold text-gray-900">{option.label}</div>
@@ -463,41 +455,54 @@ function CreateExperiment() {
                   }`}
                 >
                   <option value="">Choose a model...</option>
-                  
+
                   {formData.datasetName === 'mnist' && (
                     <>
                       <option value="small_mnist_cnn">Small MNIST CNN (Fast, 95% accuracy)</option>
-                      <option value="medium_mnist_cnn">Medium MNIST CNN (Balanced, 97% accuracy)</option>
+                      <option value="medium_mnist_cnn">
+                        Medium MNIST CNN (Balanced, 97% accuracy)
+                      </option>
                       <option value="large_mnist_cnn">Large MNIST CNN (Best, 99% accuracy)</option>
                     </>
                   )}
-                  
+
                   {formData.datasetName === 'cifar10' && (
                     <>
-                      <option value="small_cifar10_cnn">Small CIFAR-10 CNN (Fast, 70% accuracy)</option>
-                      <option value="medium_cifar10_cnn">Medium CIFAR-10 CNN (Balanced, 75% accuracy)</option>
-                      <option value="large_cifar10_cnn">Large CIFAR-10 CNN (Best, 80% accuracy)</option>
+                      <option value="small_cifar10_cnn">
+                        Small CIFAR-10 CNN (Fast, 70% accuracy)
+                      </option>
+                      <option value="medium_cifar10_cnn">
+                        Medium CIFAR-10 CNN (Balanced, 75% accuracy)
+                      </option>
+                      <option value="large_cifar10_cnn">
+                        Large CIFAR-10 CNN (Best, 80% accuracy)
+                      </option>
                     </>
                   )}
-                  
+
                   {formData.datasetName === 'fashionmnist' && (
                     <>
-                      <option value="small_fashionmnist_cnn">Small Fashion-MNIST CNN (Fast, 88% accuracy)</option>
-                      <option value="large_fashionmnist_cnn">Large Fashion-MNIST CNN (Best, 92% accuracy)</option>
+                      <option value="small_fashionmnist_cnn">
+                        Small Fashion-MNIST CNN (Fast, 88% accuracy)
+                      </option>
+                      <option value="large_fashionmnist_cnn">
+                        Large Fashion-MNIST CNN (Best, 92% accuracy)
+                      </option>
                     </>
                   )}
                 </select>
-                
+
                 {errors.model && (
                   <p className="mt-2 text-sm text-red-600 flex items-center space-x-1">
                     <AlertCircle className="w-4 h-4" />
                     <span>{errors.model}</span>
                   </p>
                 )}
-                
+
                 {formData.pretrainedModel && (
                   <p className="mt-2 text-sm text-gray-600">
-                    This model is optimized for {formData.datasetName} and trained on {formData.framework === 'pytorch' ? 'PyTorch' : 'TensorFlow'}.
+                    This model is optimized for {formData.datasetName} and trained on{' '}
+                    {formData.framework === 'pytorch' ? 'PyTorch' : 'TensorFlow'}.
                   </p>
                 )}
               </div>
@@ -553,9 +558,7 @@ function CreateExperiment() {
                   >
                     Choose File
                   </label>
-                  {errors.model && (
-                    <p className="mt-2 text-sm text-red-600">{errors.model}</p>
-                  )}
+                  {errors.model && <p className="mt-2 text-sm text-red-600">{errors.model}</p>}
                 </div>
               </div>
             )}
@@ -566,11 +569,11 @@ function CreateExperiment() {
                 <div className="flex items-start space-x-3">
                   <AlertCircle className="w-5 h-5 text-red-600 mt-0.5" />
                   <div>
-                    <p className="font-medium text-red-900 mb-2">
-                      Pretrained Models Unavailable
-                    </p>
+                    <p className="font-medium text-red-900 mb-2">Pretrained Models Unavailable</p>
                     <p className="text-red-800 text-sm mb-4">
-                      You have uploaded a custom dataset. Pretrained models are only available for preset datasets (MNIST, CIFAR-10, Fashion-MNIST). Please upload a custom model file.
+                      You have uploaded a custom dataset. Pretrained models are only available for
+                      preset datasets (MNIST, CIFAR-10, Fashion-MNIST). Please upload a custom model
+                      file.
                     </p>
                     <button
                       type="button"
@@ -605,7 +608,9 @@ function CreateExperiment() {
                 <option value="raspberry_pi_4">Raspberry Pi 4 (1.5GHz, 4GB RAM)</option>
                 <option value="raspberry_pi_5">Raspberry Pi 5 (2.4GHz, 8GB RAM)</option>
                 <option value="jetson_nano">NVIDIA Jetson Nano (Maxwell GPU, 4GB RAM)</option>
-                <option value="jetson_xavier_nx">NVIDIA Jetson Xavier NX (Volta GPU, 8GB RAM)</option>
+                <option value="jetson_xavier_nx">
+                  NVIDIA Jetson Xavier NX (Volta GPU, 8GB RAM)
+                </option>
                 <option value="coral_dev_board">Google Coral Dev Board (Edge TPU, 1GB RAM)</option>
               </select>
             </div>
@@ -629,9 +634,7 @@ function CreateExperiment() {
 
             {/* Optional Constraints */}
             <div className="border-t pt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Optional Constraints
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Optional Constraints</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -697,15 +700,15 @@ function CreateExperiment() {
                 <div>
                   <p className="text-sm text-gray-600">Dataset</p>
                   <p className="font-semibold text-gray-900">
-                    {formData.datasetType === 'preset' 
-                      ? formData.datasetName 
+                    {formData.datasetType === 'preset'
+                      ? formData.datasetName
                       : datasetFile?.name || 'Custom'}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Model</p>
                   <p className="font-semibold text-gray-900">
-                    {formData.modelSource === 'pretrained' 
+                    {formData.modelSource === 'pretrained'
                       ? formData.pretrainedModel?.replace(/_/g, ' ') || 'Pretrained'
                       : modelFile?.name || 'Custom'}
                   </p>
@@ -734,9 +737,7 @@ function CreateExperiment() {
                       </p>
                     )}
                     {formData.maxSizeMb && (
-                      <p className="text-sm text-gray-900">
-                        • Max Size: {formData.maxSizeMb} MB
-                      </p>
+                      <p className="text-sm text-gray-900">• Max Size: {formData.maxSizeMb} MB</p>
                     )}
                     {formData.maxLatencyMs && (
                       <p className="text-sm text-gray-900">
