@@ -32,9 +32,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ruff black isort
+          pip install ruff black
 
-      - name: Run Ruff (linting)
+      - name: Run Ruff (lint + import sorting)
         run: |
           echo "Running Ruff linter..."
           ruff check src/ --output-format=github
@@ -44,12 +44,6 @@ jobs:
         run: |
           echo "Checking code formatting with Black..."
           black --check src/
-        continue-on-error: false
-
-      - name: Check isort (import sorting)
-        run: |
-          echo "Checking import sorting with isort..."
-          isort --check-only src/
         continue-on-error: false
 
   # ============================================
@@ -206,17 +200,13 @@ jobs:
           HF_SPACE: ${{ secrets.HF_SPACE }}
         run: |
           echo "Deploying to Hugging Face Spaces..."
-          
-          # Add HF remote
+
           git remote add hf https://huggingface.co/spaces/${{ secrets.HF_SPACE }}
-          
-          # Configure git credentials
           git config credential.helper store
           echo "https://user:$HF_TOKEN@huggingface.co" > ~/.git-credentials
-          
-          # Push to HF Spaces
+
           git push https://user:$HF_TOKEN@huggingface.co/spaces/${{ secrets.HF_SPACE }} main:main --force
-          
+
           echo "Deployment to Hugging Face Spaces completed!"
 
   # ============================================
