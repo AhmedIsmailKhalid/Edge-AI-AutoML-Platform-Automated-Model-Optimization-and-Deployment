@@ -23,9 +23,9 @@ jobs:
   backend-lint:
     name: Backend Code Quality
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout code
+      - name: Checkout code (no LFS)
         uses: actions/checkout@v4
         with:
           lfs: false
@@ -45,13 +45,11 @@ jobs:
         run: |
           echo "Running Ruff linter..."
           ruff check src/ --output-format=github
-        continue-on-error: false
 
       - name: Check Black (formatting)
         run: |
           echo "Checking code formatting with Black..."
           black --check src/
-        continue-on-error: false
 
   # ============================================
   # Frontend Linting and Formatting
@@ -59,10 +57,12 @@ jobs:
   frontend-lint:
     name: Frontend Code Quality
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout code
+      - name: Checkout code (no LFS)
         uses: actions/checkout@v4
+        with:
+          lfs: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -80,14 +80,12 @@ jobs:
         run: |
           echo "Running ESLint..."
           npm run lint
-        continue-on-error: false
 
       - name: Check Prettier
         working-directory: ./frontend
         run: |
           echo "Checking code formatting with Prettier..."
           npx prettier --check "src/**/*.{js,jsx,ts,tsx,css,json}"
-        continue-on-error: false
 
   # ============================================
   # Backend Tests
@@ -96,10 +94,12 @@ jobs:
     name: Backend Tests
     runs-on: ubuntu-latest
     needs: backend-lint
-    
+
     steps:
-      - name: Checkout code
+      - name: Checkout code (no LFS)
         uses: actions/checkout@v4
+        with:
+          lfs: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -128,17 +128,19 @@ jobs:
         continue-on-error: true
 
   # ============================================
-  # Build Docker Image
+  # Build & Push Docker Image (Docker Hub + GHCR)
   # ============================================
   build-docker:
     name: Build Docker Image
     runs-on: ubuntu-latest
     needs: [backend-lint, frontend-lint]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
+
     steps:
-      - name: Checkout code
+      - name: Checkout code (no LFS)
         uses: actions/checkout@v4
+        with:
+          lfs: false
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -181,55 +183,19 @@ jobs:
           platforms: linux/amd64
 
   # ============================================
-  # Deploy to Hugging Face Spaces
-  # ============================================
-  deploy-hf-spaces:
-    name: Deploy to Hugging Face Spaces
-    runs-on: ubuntu-latest
-    needs: build-docker
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          lfs: false
-
-      - name: Set up Git
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-
-      - name: Push to Hugging Face Spaces
-        env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-          HF_SPACE: ${{ secrets.HF_SPACE }}
-        run: |
-          echo "Deploying to Hugging Face Spaces..."
-
-          git remote add hf https://huggingface.co/spaces/${{ secrets.HF_SPACE }}
-          git config credential.helper store
-          echo "https://user:$HF_TOKEN@huggingface.co" > ~/.git-credentials
-
-          git push https://user:$HF_TOKEN@huggingface.co/spaces/${{ secrets.HF_SPACE }} main:main --force
-
-          echo "Deployment to Hugging Face Spaces completed!"
-
-  # ============================================
   # Notification (Optional)
   # ============================================
   notify:
     name: Send Notifications
     runs-on: ubuntu-latest
-    needs: [build-docker, deploy-hf-spaces]
+    needs: [build-docker]
     if: always()
-    
+
     steps:
       - name: Notification
         run: |
-          if [ "${{ needs.deploy-hf-spaces.result }}" == "success" ]; then
-            echo "✅ Deployment successful!"
+          if [ "${{ needs.build-docker.result }}" == "success" ]; then
+            echo "✅ Build/push successful!"
           else
-            echo "❌ Deployment failed!"
+            echo "❌ Build/push failed!"
           fi
