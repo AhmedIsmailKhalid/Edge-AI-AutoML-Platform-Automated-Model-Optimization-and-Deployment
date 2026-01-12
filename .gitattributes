@@ -1,2 +1,7 @@
 models/** filter=lfs diff=lfs merge=lfs -text
 dataset/** filter=lfs diff=lfs merge=lfs -text
+models/pretrained/** filter=lfs diff=lfs merge=lfs -text
+models/custom/** filter=lfs diff=lfs merge=lfs -text
+models/optimized/** filter=lfs diff=lfs merge=lfs -text
+dataset/preset/** filter=lfs diff=lfs merge=lfs -text
+dataset/custom/** filter=lfs diff=lfs merge=lfs -text
