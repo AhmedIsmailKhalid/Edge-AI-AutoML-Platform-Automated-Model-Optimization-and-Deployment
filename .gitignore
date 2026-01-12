@@ -79,25 +79,22 @@ logs/
 # dataset/custom/
 outputs/
 
-# Keep pretrained models and example datasets
-!models/pretrained/
-!models/pretrained/**
-!models/optimized/
-!models/optimized/**
-!models/custom/
-!models/custom/**
-!dataset/preset/
-!dataset/preset/**
-!dataset/custom/
-!dataset/custom/**
+# # Keep pretrained models and example datasets
+# !models/pretrained/
+# !models/pretrained/**
+# !models/optimized/
+# !models/optimized/**
+# !models/custom/
+# !models/custom/**
+# !dataset/preset/
+# !dataset/preset/**
+# !dataset/custom/
+# !dataset/custom/**
 
 # Docker
 *.pid
 *.seed
 *.pid.lock
-supervisord.conf
-nginx.conf
-Dockerfile
 
 # Frontend
 frontend/node_modules/
