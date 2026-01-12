@@ -58,9 +58,7 @@ function ExperimentCard({ experiment, onClick }) {
           <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors line-clamp-1">
             {experiment.name}
           </h3>
-          <p className="text-sm text-gray-500 mt-1">
-            {formatDate(experiment.created_at)}
-          </p>
+          <p className="text-sm text-gray-500 mt-1">{formatDate(experiment.created_at)}</p>
         </div>
 
         {/* Status Badge */}
@@ -68,9 +66,7 @@ function ExperimentCard({ experiment, onClick }) {
           <StatusIcon
             className={`w-4 h-4 ${statusConfig.color} ${statusConfig.animate ? 'animate-spin' : ''}`}
           />
-          <span className={`text-xs font-medium ${statusConfig.color}`}>
-            {statusConfig.text}
-          </span>
+          <span className={`text-xs font-medium ${statusConfig.color}`}>{statusConfig.text}</span>
         </div>
       </div>
 
@@ -88,9 +84,7 @@ function ExperimentCard({ experiment, onClick }) {
 
         <div className="flex items-center space-x-2 text-sm text-gray-600">
           <span className="font-medium">Device:</span>
-          <span className="capitalize">
-            {experiment.target_device?.replace(/_/g, ' ')}
-          </span>
+          <span className="capitalize">{experiment.target_device?.replace(/_/g, ' ')}</span>
         </div>
       </div>
 

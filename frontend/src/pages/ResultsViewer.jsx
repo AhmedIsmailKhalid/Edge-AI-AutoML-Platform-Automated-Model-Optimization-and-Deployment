@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Calendar, Cpu, Filter, Search, Target, TrendingUp } from "lucide-react";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Calendar, Cpu, Filter, Search, Target, TrendingUp } from 'lucide-react';
 
-import { api } from "../api/client";
+import { api } from '../api/client';
 
 export default function ResultsViewer() {
   const navigate = useNavigate();
@@ -12,24 +12,24 @@ export default function ResultsViewer() {
   const [filteredExperiments, setFilteredExperiments] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
-    framework: "all",
-    status: "all",
-    device: "all",
-    goal: "all",
+    framework: 'all',
+    status: 'all',
+    device: 'all',
+    goal: 'all',
   });
 
   const fetchAllExperiments = async () => {
     try {
       setLoading(true);
-      console.log("🔍 Fetching experiments...");
+      console.log('🔍 Fetching experiments...');
       const response = await api.getRecentExperiments(100);
-      console.log("📦 Received experiments:", response.data);
-      console.log("📊 Total experiments:", response.data.length);
+      console.log('📦 Received experiments:', response.data);
+      console.log('📊 Total experiments:', response.data.length);
       setExperiments(response.data);
     } catch (error) {
-      console.error("❌ Failed to fetch experiments:", error);
+      console.error('❌ Failed to fetch experiments:', error);
     } finally {
       setLoading(false);
     }
@@ -52,19 +52,19 @@ export default function ResultsViewer() {
       );
     }
 
-    if (filters.framework !== "all") {
+    if (filters.framework !== 'all') {
       filtered = filtered.filter((exp) => exp.framework === filters.framework);
     }
 
-    if (filters.status !== "all") {
+    if (filters.status !== 'all') {
       filtered = filtered.filter((exp) => exp.status === filters.status);
     }
 
-    if (filters.device !== "all") {
+    if (filters.device !== 'all') {
       filtered = filtered.filter((exp) => exp.target_device === filters.device);
     }
 
-    if (filters.goal !== "all") {
+    if (filters.goal !== 'all') {
       filtered = filtered.filter((exp) => exp.optimization_goal === filters.goal);
     }
 
@@ -77,10 +77,10 @@ export default function ResultsViewer() {
 
   const getStatusBadge = (status) => {
     const statusStyles = {
-      pending: "bg-gray-100 text-gray-800",
-      running: "bg-blue-100 text-blue-800",
-      completed: "bg-green-100 text-green-800",
-      failed: "bg-red-100 text-red-800",
+      pending: 'bg-gray-100 text-gray-800',
+      running: 'bg-blue-100 text-blue-800',
+      completed: 'bg-green-100 text-green-800',
+      failed: 'bg-red-100 text-red-800',
     };
 
     return (
@@ -89,19 +89,19 @@ export default function ResultsViewer() {
           statusStyles[status] || statusStyles.pending
         }`}
       >
-        {status ? status.charAt(0).toUpperCase() + status.slice(1) : "Pending"}
+        {status ? status.charAt(0).toUpperCase() + status.slice(1) : 'Pending'}
       </span>
     );
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   };
 
@@ -146,14 +146,10 @@ export default function ResultsViewer() {
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Framework
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Framework</label>
                 <select
                   value={filters.framework}
-                  onChange={(e) =>
-                    handleFilterChange("framework", e.target.value)
-                  }
+                  onChange={(e) => handleFilterChange('framework', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="all">All Frameworks</option>
@@ -163,12 +159,10 @@ export default function ResultsViewer() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Status
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                 <select
                   value={filters.status}
-                  onChange={(e) => handleFilterChange("status", e.target.value)}
+                  onChange={(e) => handleFilterChange('status', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="all">All Statuses</option>
@@ -180,12 +174,10 @@ export default function ResultsViewer() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Device
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Device</label>
                 <select
                   value={filters.device}
-                  onChange={(e) => handleFilterChange("device", e.target.value)}
+                  onChange={(e) => handleFilterChange('device', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="all">All Devices</option>
@@ -199,12 +191,10 @@ export default function ResultsViewer() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Goal
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Goal</label>
                 <select
                   value={filters.goal}
-                  onChange={(e) => handleFilterChange("goal", e.target.value)}
+                  onChange={(e) => handleFilterChange('goal', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="all">All Goals</option>
@@ -221,9 +211,7 @@ export default function ResultsViewer() {
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
           {filteredExperiments.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-500">
-                No experiments found matching your criteria.
-              </p>
+              <p className="text-gray-500">No experiments found matching your criteria.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -260,21 +248,17 @@ export default function ResultsViewer() {
                       key={experiment.id}
                       className="hover:bg-gray-50 cursor-pointer"
                       onClick={() => {
-                        if (experiment.status === "completed") {
+                        if (experiment.status === 'completed') {
                           navigate(`/experiment/${experiment.id}/results`);
-                        } else if (experiment.status === "running") {
+                        } else if (experiment.status === 'running') {
                           navigate(`/experiment/${experiment.id}/progress`);
                         }
                       }}
                     >
                       <td className="px-6 py-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          {experiment.name}
-                        </div>
+                        <div className="text-sm font-medium text-gray-900">{experiment.name}</div>
                         {experiment.model_name && (
-                          <div className="text-sm text-gray-500">
-                            {experiment.model_name}
-                          </div>
+                          <div className="text-sm text-gray-500">{experiment.model_name}</div>
                         )}
                       </td>
 
@@ -289,7 +273,7 @@ export default function ResultsViewer() {
                         <div className="flex items-center text-sm text-gray-900">
                           <Target className="h-4 w-4 mr-1" />
                           <span className="capitalize">
-                            {(experiment.target_device || "").replace(/_/g, " ")}
+                            {(experiment.target_device || '').replace(/_/g, ' ')}
                           </span>
                         </div>
                       </td>
@@ -298,10 +282,7 @@ export default function ResultsViewer() {
                         <div className="flex items-center text-sm text-gray-900">
                           <TrendingUp className="h-4 w-4 mr-1" />
                           <span className="capitalize">
-                            {(experiment.optimization_goal || "").replace(
-                              /_/g,
-                              " "
-                            )}
+                            {(experiment.optimization_goal || '').replace(/_/g, ' ')}
                           </span>
                         </div>
                       </td>
@@ -321,9 +302,9 @@ export default function ResultsViewer() {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            if (experiment.status === "completed") {
+                            if (experiment.status === 'completed') {
                               navigate(`/experiment/${experiment.id}/results`);
-                            } else if (experiment.status === "running") {
+                            } else if (experiment.status === 'running') {
                               navigate(`/experiment/${experiment.id}/progress`);
                             }
                           }}
