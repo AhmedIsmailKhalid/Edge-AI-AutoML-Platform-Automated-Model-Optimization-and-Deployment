@@ -7,6 +7,10 @@ on:
   pull_request:
     branches: [main, develop]
 
+permissions:
+  contents: read
+  packages: write
+
 env:
   PYTHON_VERSION: '3.11'
   NODE_VERSION: '20'
