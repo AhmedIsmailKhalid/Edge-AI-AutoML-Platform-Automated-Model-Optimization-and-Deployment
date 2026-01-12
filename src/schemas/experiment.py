@@ -81,9 +81,9 @@ class ExperimentResponse(BaseModel):
     dataset_path: str | None = None
     target_device: str | None = None
     optimization_goal: str | None = None
-    min_accuracy_percent: Optional[float] = None  # noqa: UP007
-    max_size_mb: Optional[float] = None  # noqa: UP007
-    max_latency_ms: Optional[float] = None  # noqa: UP007
+    min_accuracy_percent: float | None = None
+    max_size_mb: float | None = None
+    max_latency_ms: float | None = None
     max_accuracy_drop_percent: float | None = None
     status: str
     progress_percent: int
