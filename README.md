@@ -1198,21 +1198,21 @@ SOFTWARE.
 
 ## About the Author
 
-**Name:** [Your Name]
+**Name:** Ahmed Khalid
 
 **Role:** ML/AI/MLOps Engineer
 
 **Links:**
-- LinkedIn: [Your LinkedIn URL]
-- GitHub: [Your GitHub URL]
-- Portfolio: [Your Portfolio URL]
-- Email: [Your Email]
+- **LinkedIn**: https://www.linkedin.com/in/ahmedismailkhalid/
+- **GitHub**: https://github.com/AhmedIsmailKhalid
+- **Portfolio**: **PORTFOLIO WEBSITE COMING SOON!**
+- **Email**: ahmedik95316@gmail.com
 
 **About This Project:**
 
 This project was developed as a portfolio piece to demonstrate end-to-end product development skills, from system design and ML engineering to full-stack development and production deployment. It showcases the ability to identify real-world problems, design scalable solutions, and deliver production-ready applications.
 
-**Video Demo:** [YouTube link - to be added]
+**Video Demo:** **YOUTUBE DEMO VIDEO LINK COMING SOON!**
 
 ---
 
@@ -1241,7 +1241,3 @@ This project was developed as a portfolio piece to demonstrate end-to-end produc
 - Open source contributors whose tools made this possible
 
 ---
-
-**Built with passion for Edge AI and MLOps.**
-
-Last Updated: January 2026
