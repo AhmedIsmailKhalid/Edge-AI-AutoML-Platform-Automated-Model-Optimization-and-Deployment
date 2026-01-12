@@ -9,6 +9,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+# Import API routers AFTER app is created (lazy loading heavy dependencies)
+from src.api import experiments, optimize, performance, results, upload, websocket
 from src.config import settings
 from src.database import Base, engine
 
@@ -72,6 +74,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Health check endpoint - MUST respond immediately
 @app.get("/health", tags=["Health"])
 async def health_check():
@@ -90,10 +93,6 @@ async def root():
         "status": "operational",
     }
 
-
-# Import API routers AFTER app is created (lazy loading heavy dependencies)
-from src.api import (experiments, optimize, performance, results, upload,
-                     websocket)
 
 # Register API routers
 app.include_router(experiments.router, prefix="/api/experiments", tags=["Experiments"])
@@ -154,11 +153,5 @@ if __name__ == "__main__":
 
     port = int(os.getenv("PORT", "8000"))
     logger.info(f"Starting server on port {port}")
-    
-    uvicorn.run(
-        "src.main:app", 
-        host="0.0.0.0", 
-        port=port, 
-        reload=False,
-        log_level="info"
-    )
+
+    uvicorn.run("src.main:app", host="0.0.0.0", port=port, reload=False, log_level="info")

@@ -8,9 +8,7 @@ from typing import Any
 import tensorflow as tf
 import torch
 
-from scripts.create_pretrained_models import (PyTorchLargeCNN,
-                                              PyTorchMediumCNN,
-                                              PyTorchSmallCNN)
+from scripts.create_pretrained_models import PyTorchLargeCNN, PyTorchMediumCNN, PyTorchSmallCNN
 
 
 def load_model(framework: str, model_path: Path):

@@ -15,15 +15,18 @@ from src.config import settings
 from src.core.base import OptimizationResult
 from src.core.performance_estimator import DeviceType, PerformanceEstimator
 from src.core.pytorch.hybrid import HybridPruneQuantizePyTorch
-from src.core.pytorch.pruning import (PruningMagnitudeStructuredPyTorch,
-                                      PruningMagnitudeUnstructuredPyTorch)
+from src.core.pytorch.pruning import (
+    PruningMagnitudeStructuredPyTorch,
+    PruningMagnitudeUnstructuredPyTorch,
+)
 from src.core.pytorch.ptq_int4 import PTQInt4PyTorch
 from src.core.pytorch.ptq_int8 import PTQInt8PyTorch
 from src.core.pytorch.qat import QuantizationAwareTrainingPyTorch
 from src.core.tensorflow.hybrid import HybridPruneQuantizeTensorFlow
 from src.core.tensorflow.pruning import (
     PruningMagnitudeStructuredTensorFlow,
-    PruningMagnitudeUnstructuredTensorFlow)
+    PruningMagnitudeUnstructuredTensorFlow,
+)
 from src.core.tensorflow.ptq_int4 import PTQInt4TensorFlow
 from src.core.tensorflow.ptq_int8 import PTQInt8TensorFlow
 from src.core.tensorflow.qat import QuantizationAwareTrainingTensorFlow

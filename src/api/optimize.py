@@ -40,6 +40,7 @@ async def start_optimization(
     """
     # Get experiment
     from src.core.orchestrator import ExperimentOrchestrator
+
     experiment = db.query(Experiment).filter(Experiment.id == experiment_id).first()
 
     if not experiment:

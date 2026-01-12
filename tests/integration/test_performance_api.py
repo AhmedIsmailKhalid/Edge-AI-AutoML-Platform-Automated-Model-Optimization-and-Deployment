@@ -7,8 +7,7 @@ from fastapi.testclient import TestClient
 
 from src.database import SessionLocal
 from src.main import app
-from src.models.experiment import (Experiment, ExperimentStatus,
-                                   OptimizationGoal)
+from src.models.experiment import Experiment, ExperimentStatus, OptimizationGoal
 from src.models.optimization_run import OptimizationRun, OptimizationStatus
 
 client = TestClient(app)

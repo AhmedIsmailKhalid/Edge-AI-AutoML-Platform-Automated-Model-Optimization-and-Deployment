@@ -4,8 +4,7 @@ Unit tests for performance estimator.
 
 import pytest
 
-from src.core.performance_estimator import (DEVICE_SPECS, DeviceType,
-                                            PerformanceEstimator)
+from src.core.performance_estimator import DEVICE_SPECS, DeviceType, PerformanceEstimator
 
 
 def test_device_specs_exist():

@@ -10,8 +10,7 @@ import pytest
 import websockets
 
 from src.database import SessionLocal
-from src.models.experiment import (Experiment, ExperimentStatus,
-                                   OptimizationGoal)
+from src.models.experiment import Experiment, ExperimentStatus, OptimizationGoal
 
 
 @pytest.mark.asyncio

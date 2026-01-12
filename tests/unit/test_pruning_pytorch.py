@@ -7,8 +7,10 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 
-from src.core.pytorch.pruning import (PruningMagnitudeStructuredPyTorch,
-                                      PruningMagnitudeUnstructuredPyTorch)
+from src.core.pytorch.pruning import (
+    PruningMagnitudeStructuredPyTorch,
+    PruningMagnitudeUnstructuredPyTorch,
+)
 
 
 class SimpleModel(nn.Module):

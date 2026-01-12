@@ -7,8 +7,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from src.core.performance_estimator import (DEVICE_SPECS, DeviceType,
-                                            PerformanceEstimator)
+from src.core.performance_estimator import DEVICE_SPECS, DeviceType, PerformanceEstimator
 from src.database import get_db
 from src.models.experiment import Experiment
 from src.models.optimization_run import OptimizationRun
