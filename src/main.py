@@ -92,7 +92,8 @@ async def root():
 
 
 # Import API routers AFTER app is created (lazy loading heavy dependencies)
-from src.api import experiments, upload, optimize, results, performance, websocket
+from src.api import (experiments, optimize, performance, results, upload,
+                     websocket)
 
 # Register API routers
 app.include_router(experiments.router, prefix="/api/experiments", tags=["Experiments"])

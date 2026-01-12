@@ -8,8 +8,7 @@ import tensorflow as tf
 
 from src.core.tensorflow.pruning import (
     PruningMagnitudeStructuredTensorFlow,
-    PruningMagnitudeUnstructuredTensorFlow,
-)
+    PruningMagnitudeUnstructuredTensorFlow)
 
 
 @pytest.fixture

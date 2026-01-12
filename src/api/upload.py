@@ -7,7 +7,8 @@ import shutil
 from pathlib import Path
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from fastapi import (APIRouter, Depends, File, Form, HTTPException, UploadFile,
+                     status)
 from sqlalchemy.orm import Session
 
 from src.config import settings
@@ -15,7 +16,8 @@ from src.database import get_db
 from src.models.experiment import Experiment
 from src.models.model_file import ModelFile
 from src.schemas.upload import ModelUploadResponse
-from src.utils.file_handler import calculate_checksum, save_uploaded_file, validate_model_file
+from src.utils.file_handler import (calculate_checksum, save_uploaded_file,
+                                    validate_model_file)
 
 router = APIRouter()
 
