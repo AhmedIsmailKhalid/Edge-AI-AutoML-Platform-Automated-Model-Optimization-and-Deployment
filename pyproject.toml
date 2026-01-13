@@ -63,6 +63,12 @@ exclude = '''
   | dist
 )/
 '''
+# Don't normalize line endings (Windows compatibility)
+force-exclude = '''
+/(
+    \.git
+)/
+'''
 
 [tool.ruff]
 line-length = 100
