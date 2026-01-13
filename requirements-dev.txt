@@ -1,8 +1,6 @@
 # Code formatting and linting
 ruff==0.1.9
 black==23.12.1
-isort==5.13.2
-
 # Testing
 pytest==7.4.3
 pytest-asyncio==0.21.1
