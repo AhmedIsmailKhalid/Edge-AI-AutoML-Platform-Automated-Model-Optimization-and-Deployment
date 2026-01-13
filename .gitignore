@@ -78,6 +78,7 @@ logs/
 # models/custom/
 # dataset/custom/
 outputs/
+uploads/
 
 # # Keep pretrained models and example datasets
 # !models/pretrained/
