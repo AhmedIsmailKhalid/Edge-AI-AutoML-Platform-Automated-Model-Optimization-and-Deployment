@@ -171,31 +171,3 @@ jobs:
           else
             echo "❌ Deployment failed!"
           fi
-```
-
----
-
-## **Summary**
-
-**Your Understanding:** ❌ "HF Spaces auto-detects Docker Hub updates"  
-**Reality:** ✅ "HF Spaces rebuilds when you push to its Git repo"
-
-**The Complete Flow:**
-```
-GitHub (main branch push)
-  ↓
-GitHub Actions CI/CD
-  ├─ Lint code
-  ├─ Run tests
-  ├─ Build Docker image → Push to Docker Hub
-  └─ Push code to HF Spaces Git repo ← THIS TRIGGERS REBUILD
-       ↓
-HF Spaces detects Git push
-  ↓
-HF Spaces rebuilds
-  ↓
-Dockerfile: FROM ahmedik95316/edge-ai-automl:latest
-  ↓
-Pulls latest image from Docker Hub
-  ↓
-✅ App updated with latest code!
