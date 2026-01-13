@@ -178,37 +178,62 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
 
-      - name: Create HF deployment branch (without LFS files)
+      - name: Create HF Spaces deployment files
         run: |
-          echo "Creating clean branch for HF Spaces..."
+          echo "🚀 Creating HF Spaces deployment..."
           
-          # Create new orphan branch
+          # Create new orphan branch (clean slate)
           git checkout --orphan hf-deploy
+          git rm -rf . 2>/dev/null || true
           
-          # Remove large files
-          rm -rf models/ dataset/ uploads/ outputs/
+          # 1. Create simple Dockerfile (pulls from Docker Hub)
+          cat > Dockerfile <<'DOCKERFILE'
+          FROM ahmedik95316/edge-ai-automl:latest
+          EXPOSE 7860
+          HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+            CMD curl -f http://localhost:7860/health || exit 1
+          CMD ["/app/start.sh"]
+          DOCKERFILE
           
-          # Stage remaining files
-          git add .
+          # 2. Create HF Spaces README by prepending metadata to existing README
+          cat > README.md <<'HEADER'
+          ---
+          title: Edge AI AutoML Platform Automated Model Optimization and Deployment
+          colorFrom: gray
+          colorTo: gray
+          sdk: docker
+          license: mit
+          ---
           
-          # Commit
-          git commit -m "Deploy to HF Spaces (without LFS files)"
+          HEADER
+          
+          # Append the existing README content (from main branch)
+          git show main:README.md >> README.md
+          
+          # 3. Create .gitignore
+          cat > .gitignore <<'GITIGNORE'
+          __pycache__/
+          *.pyc
+          .env
+          GITIGNORE
+          
+          echo "✅ HF Spaces files created"
+
+      - name: Commit HF Spaces deployment
+        run: |
+          git add Dockerfile README.md .gitignore
+          git commit -m "Deploy to HF Spaces (Docker Hub: ahmedik95316/edge-ai-automl:latest)"
 
       - name: Push to HF Spaces
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_SPACE: ${{ secrets.HF_SPACE }}
         run: |
-          echo "Deploying to Hugging Face Spaces..."
-          
-          # Configure credentials
+          echo "📤 Pushing to Hugging Face Spaces..."
           git config credential.helper store
           echo "https://user:$HF_TOKEN@huggingface.co" > ~/.git-credentials
-          
-          # Push clean branch to HF Spaces main
           git push https://user:$HF_TOKEN@huggingface.co/spaces/${{ secrets.HF_SPACE }} hf-deploy:main --force
-          
-          echo "✅ Code deployed! Large files excluded from HF Spaces."
+          echo "✅ Deployment successful!"
 
   notify:
     name: Send Notifications
