@@ -7,18 +7,18 @@ on:
   pull_request:
     branches: [main, develop]
 
+permissions:
+  contents: read
+  packages: write
+
 env:
-  PYTHON_VERSION: '3.11'
-  NODE_VERSION: '20'
+  PYTHON_VERSION: "3.11"
+  NODE_VERSION: "20"
 
 jobs:
-  # ============================================
-  # Backend Linting and Formatting
-  # ============================================
   backend-lint:
     name: Backend Code Quality
     runs-on: ubuntu-latest
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,32 +27,26 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'pip'
+          cache: pip
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install ruff black
 
-      - name: Run Ruff (lint + import sorting)
+      - name: Run Ruff (linting + import sorting)
         run: |
-          echo "Running Ruff linter..."
+          echo "Running Ruff linter and import sorting..."
           ruff check src/ --output-format=github
-        continue-on-error: false
 
       - name: Check Black (formatting)
         run: |
           echo "Checking code formatting with Black..."
           black --check src/
-        continue-on-error: false
 
-  # ============================================
-  # Frontend Linting and Formatting
-  # ============================================
   frontend-lint:
     name: Frontend Code Quality
     runs-on: ubuntu-latest
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -61,7 +55,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: npm
           cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
@@ -70,26 +64,16 @@ jobs:
 
       - name: Run ESLint
         working-directory: ./frontend
-        run: |
-          echo "Running ESLint..."
-          npm run lint
-        continue-on-error: false
+        run: npm run lint
 
       - name: Check Prettier
         working-directory: ./frontend
-        run: |
-          echo "Checking code formatting with Prettier..."
-          npx prettier --check "src/**/*.{js,jsx,ts,tsx,css,json}"
-        continue-on-error: false
+        run: npx prettier --check "src/**/*.{js,jsx,ts,tsx,css,json}"
 
-  # ============================================
-  # Backend Tests
-  # ============================================
   backend-test:
     name: Backend Tests
     runs-on: ubuntu-latest
     needs: backend-lint
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -98,7 +82,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'pip'
+          cache: pip
 
       - name: Install dependencies
         run: |
@@ -107,28 +91,21 @@ jobs:
           pip install -r requirements-dev.txt
 
       - name: Run tests
-        run: |
-          echo "Running pytest..."
-          pytest tests/ -v --cov=src --cov-report=xml --cov-report=term
+        run: pytest tests/ -v --cov=src --cov-report=xml --cov-report=term
         continue-on-error: true
 
-      - name: Upload coverage reports
+      - name: Upload coverage
         uses: codecov/codecov-action@v4
         with:
           file: ./coverage.xml
           flags: backend
-          name: backend-coverage
         continue-on-error: true
 
-  # ============================================
-  # Build Docker Image
-  # ============================================
   build-docker:
     name: Build Docker Image
     runs-on: ubuntu-latest
     needs: [backend-lint, frontend-lint]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -142,7 +119,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Log in to GitHub Container Registry
+      - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -161,7 +138,7 @@ jobs:
             type=sha,prefix={{branch}}-
             type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: Build and push Docker image
+      - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -173,51 +150,40 @@ jobs:
           cache-to: type=gha,mode=max
           platforms: linux/amd64
 
-  # ============================================
-  # Deploy to Hugging Face Spaces
-  # ============================================
   deploy-hf-spaces:
     name: Deploy to Hugging Face Spaces
     runs-on: ubuntu-latest
     needs: build-docker
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
     steps:
-      - name: Checkout code
+      - name: Checkout code (skip LFS)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          lfs: true
+          lfs: false
 
       - name: Set up Git
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
 
-      - name: Push to Hugging Face Spaces
+      - name: Push to HF Spaces
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_SPACE: ${{ secrets.HF_SPACE }}
         run: |
           echo "Deploying to Hugging Face Spaces..."
-
-          git remote add hf https://huggingface.co/spaces/${{ secrets.HF_SPACE }}
+          git remote add hf https://huggingface.co/spaces/${{ secrets.HF_SPACE }} || true
           git config credential.helper store
           echo "https://user:$HF_TOKEN@huggingface.co" > ~/.git-credentials
-
           git push https://user:$HF_TOKEN@huggingface.co/spaces/${{ secrets.HF_SPACE }} main:main --force
+          echo "✅ Deployment completed!"
 
-          echo "Deployment to Hugging Face Spaces completed!"
-
-  # ============================================
-  # Notification (Optional)
-  # ============================================
   notify:
     name: Send Notifications
     runs-on: ubuntu-latest
     needs: [build-docker, deploy-hf-spaces]
     if: always()
-    
     steps:
       - name: Notification
         run: |

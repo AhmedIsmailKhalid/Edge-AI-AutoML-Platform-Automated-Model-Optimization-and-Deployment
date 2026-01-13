@@ -87,11 +87,11 @@ ignore = [
     "W191",
 ]
 
-[tool.ruff.lint.isort]
-combine-as-imports = true
+[tool.ruff.isort]
+# Ruff's isort configuration (replaces standalone isort)
+known-first-party = ["src"]
 force-single-line = false
 lines-after-imports = 2
-known-first-party = ["src"]
 
 
 [tool.mypy]
