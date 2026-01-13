@@ -171,11 +171,21 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     
     steps:
-      - name: Checkout code (skip LFS)
+      - name: Checkout code (with LFS)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          lfs: false
+          lfs: true
+          
+      - name: Install Git LFS
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git-lfs
+          
+      - name: Fetch LFS objects
+        run: |
+          git lfs install
+          git lfs pull
 
       - name: Set up Git
         run: |
