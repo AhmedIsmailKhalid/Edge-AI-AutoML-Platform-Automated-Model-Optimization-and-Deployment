@@ -165,40 +165,40 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-docker
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
+    
     steps:
-      - name: Checkout code (with LFS)
+      - name: Checkout code (skip LFS)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          lfs: true
-
-      - name: Install Git LFS
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git-lfs
-
-      - name: Fetch LFS objects
-        run: |
-          git lfs install
-          git lfs pull
+          lfs: false  # Skip LFS to avoid quota issues
 
       - name: Set up Git
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
 
-      - name: Push to HF Spaces
+      - name: Push code only to HF Spaces (LFS files already there)
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_SPACE: ${{ secrets.HF_SPACE }}
         run: |
-          echo "Deploying to Hugging Face Spaces..."
+          echo "Deploying code to Hugging Face Spaces..."
+          
+          # Disable LFS for this push
+          git lfs uninstall
+          
+          # Add HF remote
           git remote add hf https://huggingface.co/spaces/${{ secrets.HF_SPACE }} || true
+          
+          # Configure credentials
           git config credential.helper store
           echo "https://user:$HF_TOKEN@huggingface.co" > ~/.git-credentials
-          git push https://user:$HF_TOKEN@huggingface.co/spaces/${{ secrets.HF_SPACE }} main:main --force
-          echo "✅ Deployment completed!"
+          
+          # Push only code changes (LFS files already on HF Spaces)
+          GIT_LFS_SKIP_SMUDGE=1 git push https://user:$HF_TOKEN@huggingface.co/spaces/${{ secrets.HF_SPACE }} main:main --force --no-verify
+          
+          echo "✅ Code deployed! LFS files remain unchanged on HF Spaces."
 
   notify:
     name: Send Notifications
