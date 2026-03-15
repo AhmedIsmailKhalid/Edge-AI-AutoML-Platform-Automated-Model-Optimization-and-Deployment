@@ -186,7 +186,7 @@
           <mxGeometry height="60" width="239.25" x="530.25" y="1768" as="geometry" />
         </mxCell>
         <mxCell id="AWeKRkhxLQd8NTu_d8WR-136" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 35px;&quot;&gt;PTQ INT8&lt;/font&gt;" vertex="1">
-          <mxGeometry height="60" width="239.25" x="961.5" y="1760" as="geometry" />
+          <mxGeometry height="60" width="239.25" x="812.75" y="1768" as="geometry" />
         </mxCell>
         <mxCell id="AWeKRkhxLQd8NTu_d8WR-139" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 35px;&quot;&gt;Distillation&lt;/font&gt;" vertex="1">
           <mxGeometry height="60" width="239.25" x="530.25" y="1898" as="geometry" />
