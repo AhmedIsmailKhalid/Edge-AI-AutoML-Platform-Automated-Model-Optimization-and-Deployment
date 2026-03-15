@@ -8,7 +8,6 @@ from src.models.model_file import ModelFile
 from src.models.optimization_run import OptimizationRun
 from src.models.recommendation import Recommendation
 
-
 __all__ = [
     "Experiment",
     "OptimizationRun",

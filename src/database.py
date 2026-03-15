@@ -10,7 +10,6 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from src.config import settings
 
-
 # Create database engine with proper pooling configuration
 engine = create_engine(
     settings.database_url,

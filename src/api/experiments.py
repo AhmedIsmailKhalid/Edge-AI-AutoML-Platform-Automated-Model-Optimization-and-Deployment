@@ -16,7 +16,6 @@ from src.schemas.experiment import (
     ExperimentUpdate,
 )
 
-
 router = APIRouter()
 
 

@@ -11,7 +11,6 @@ from sqlalchemy.orm import Session
 from src.database import get_db
 from src.models.experiment import Experiment
 
-
 router = APIRouter()
 
 # Store active WebSocket connections per experiment
